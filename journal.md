@@ -59,3 +59,6 @@ is to log the text to be printed in a buffer. We add a method to capture the pri
 This BufferingPrinter act as a [test double](https://martinfowler.com/bliki/TestDouble.html).
 
 So now we update our database of scenarios with the printed lines and use this extra data to enrich our tests and ensure our behaviour is preserved.
+## First refactor
+Once we have confidence in our tests, we can start refactor our Game class. The first bold step is to stop redefining the python built-in "print"
+and use the printer each time we want to print.

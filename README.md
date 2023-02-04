@@ -11,4 +11,8 @@ The trivia project is an exercise of refactoring. This project aims to
 progressively refactor the Game class. We will try to preserve the functional behavior of its public methods. The goal is not to fix bugs but to improve the readability and
 the modularity even though typos will be fixed ;)
 ## How to follow the project
-The evolution of the code can be followed on the main branch of git. A journal is going to be maintained.
+The evolution of the code can be followed on the main branch of git.
+
+A journal is being maintained.
+
+You can visit the [history](https://github.com/AnesFoufa/trivia/commits/main) and for each commit, read the new section of the journal describing the changelog.
