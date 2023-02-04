@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+import json
+import pathlib
 
 
 class Game:
@@ -178,22 +179,51 @@ class Game:
 
 from random import randrange
 
-if __name__ == "__main__":
+
+def capture_interaction(file_name, players):
     not_a_winner = False
-
     game = Game()
-
-    game.add("Chet")
-    game.add("Pat")
-    game.add("Sue")
-
+    scenario = []
+    for player in players:
+        add_res = game.add(player)
+        scenario.append(
+            {
+                "method": "add",
+                "args": [player],
+                "return": add_res,
+            }
+        )
     while True:
-        game.roll(randrange(5) + 1)
+        roll_arg = randrange(5) + 1
+        game.roll(roll_arg)
+        scenario.append(
+            {
+                "method": "roll",
+                "args": [roll_arg],
+                "return": None,
+            }
+        )
 
         if randrange(9) == 7:
             not_a_winner = game.wrong_answer()
+            scenario.append(
+                {"method": "wrong_answer", "args": [], "return": not_a_winner}
+            )
         else:
             not_a_winner = game.was_correctly_answered()
+            scenario.append(
+                {"method": "was_correctly_answered", "args": [], "return": not_a_winner}
+            )
 
         if not not_a_winner:
             break
+    path_to_data = pathlib.Path().absolute() / "data"
+    with open(path_to_data / file_name, "w") as f:
+        print(scenario)
+        json.dump(scenario, f)
+
+
+if __name__ == "__main__":
+    capture_interaction("first_scenario.json", players=["Chet", "Pat", "Sue"])
+    capture_interaction("second_scenario.json", players=["Chet", "Pat", "Sue", "Jim"])
+    capture_interaction("third_scenario.json", players=["Chet", "Pat"])

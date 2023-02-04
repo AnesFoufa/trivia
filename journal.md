@@ -1,6 +1,8 @@
 # Journal
+
 ## Initial commit
 Copy the code from Jetbrain's trivia repository, write a README and begin the refactoring journal.
+
 ## Code format and first CI workflow
 The first obvious way to improve the readability of a codebase is to use a code formatter.
 I choose the uncompromising opinionated [black](https://github.com/psf/black).
@@ -8,6 +10,36 @@ I choose the uncompromising opinionated [black](https://github.com/psf/black).
 Code formatting is important to ensure a consistent style across the entire code base for all the project's life.
 The simple quoted strings have been replaced by double-quoted ones for example.
 
-In order to unsure the code formatter is going to be used systematically before each commit, I install [pre-commit](https://pre-commit.com/).
+In order to unsure the code formatter is going to be used systematically before each commit,
+I install [pre-commit](https://pre-commit.com/).
 
-I also add a [Github Actions](https://docs.github.com/en/actions) workflow to unsure each pushed commit is correctly formatted.
+I also add a [Github Actions](https://docs.github.com/en/actions)
+workflow to unsure each pushed commit is correctly formatted.
+## First tests
+Since the goal of refactoring is to preserve the existing behaviour,
+we must have some data that define the desired behaviour we want to preserve. In our case, in the main
+script, we have an example of a randomized interactions with a Game object.
+
+Let us say these runs are the behaviours we want to preserve.
+After each iteration of refactor, we want to reproduce the runs and verify they didn't change.
+
+Let us defined each run as a scenario. Each scenario is an ordered list of steps,
+at each step we call a method of Game. To reproduce a scenario, we must record the name of the called method,
+the arguments we called it with and the returned value.
+
+However, there is an important missing data: the printed text: Each method call prints texts and this
+printed text, even though it is not part of the returned value, is in important part of what defines the behaviour of Game.
+
+For now, we don't bother with recording the printed text. For now, we just want to record some scenarios and to replay
+them in tests.
+
+Three scenarios with two, three and four players are constituted. They can be rerun in our test suite.
+Our test suite is integrated to our CI. If the test suite is broken, it means our refactor broke the behaviour of the Game class.
+
+Later, the test suite will be enriched with the printed text.
+### Technologies and read more
+Tests are written and run using [pytest](https://docs.pytest.org/).
+
+You can find [here](https://docs.pytest.org/) an example of running pytest in Github Actions.
+
+On the concept of CI (Continuous Integration) you can read the classic [book by Paul Duvall](https://www.amazon.fr/Continuous-Integration-Improving-Software-Reducing/dp/0321336380)

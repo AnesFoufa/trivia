@@ -1,0 +1,282 @@
+[
+  {
+    "method": "add",
+    "args": [
+      "Chet"
+    ],
+    "return": true
+  },
+  {
+    "method": "add",
+    "args": [
+      "Pat"
+    ],
+    "return": true
+  },
+  {
+    "method": "add",
+    "args": [
+      "Sue"
+    ],
+    "return": true
+  },
+  {
+    "method": "add",
+    "args": [
+      "Jim"
+    ],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      4
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      4
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      2
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      2
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      5
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      3
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      5
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      1
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      5
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      5
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      4
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      4
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      1
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      4
+    ],
+    "return": null
+  },
+  {
+    "method": "wrong_answer",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      1
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      1
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      3
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      1
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      1
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      1
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": true
+  },
+  {
+    "method": "roll",
+    "args": [
+      5
+    ],
+    "return": null
+  },
+  {
+    "method": "was_correctly_answered",
+    "args": [],
+    "return": false
+  }
+]
