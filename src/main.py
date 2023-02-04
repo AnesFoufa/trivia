@@ -35,19 +35,26 @@ class Game:
         self._purses = [0] * 6
         self._in_penalty_box = [0] * 6
 
-        self._pop_questions = []
-        self._science_questions = []
-        self._sports_questions = []
-        self._rock_questions = []
-
         self._i_current_player = 0
         self._is_getting_out_of_penalty_box = False
 
+        pop_questions = []
+        science_questions = []
+        sports_questions = []
+        rock_questions = []
+
         for i in range(50):
-            self._pop_questions.append(self._create_question(i, self._POP))
-            self._science_questions.append(self._create_question(i, self._SCIENCE))
-            self._sports_questions.append(self._create_question(i, self._SPORTS))
-            self._rock_questions.append(self._create_question(i, self._ROCK))
+            pop_questions.append(self._create_question(i, self._POP))
+            science_questions.append(self._create_question(i, self._SCIENCE))
+            sports_questions.append(self._create_question(i, self._SPORTS))
+            rock_questions.append(self._create_question(i, self._ROCK))
+
+        self._questions_by_category = {
+            self._POP: pop_questions,
+            self._ROCK: rock_questions,
+            self._SCIENCE: science_questions,
+            self._SPORTS: sports_questions,
+        }
 
         if printer is None:
             self._printer = Printer(file=sys.stdout)
@@ -87,9 +94,7 @@ class Game:
                 self._printer.print(
                     f"{self._current_player_name} is getting out of the penalty box"
                 )
-                self._current_player_place = self._current_player_place + roll
-                if self._current_player_place > 11:
-                    self._current_player_place = self._current_player_place - 12
+                self._move_current_player(roll)
 
                 self._printer.print(
                     f"{self._current_player_name}'s new location is {str(self._current_player_place)}"
@@ -102,9 +107,7 @@ class Game:
                 )
                 self._is_getting_out_of_penalty_box = False
         else:
-            self._current_player_place = self._current_player_place + roll
-            if self._current_player_place > 11:
-                self._current_player_place = self._current_player_place - 12
+            self._move_current_player(roll)
 
             self._printer.print(
                 f"{self._current_player_name}'s new location is {self._current_player_place}"
@@ -112,42 +115,26 @@ class Game:
             self._printer.print(f"The category is {self._current_category}")
             self._ask_question()
 
+    def _move_current_player(self, roll):
+        self._current_player_place = (self._current_player_place + roll) % 12
+
     @property
     def _current_player_name(self):
         return self._players_names[self._i_current_player]
 
     def _ask_question(self):
-        if self._current_category == self._POP:
-            self._printer.print(self._pop_questions.pop(0))
-        if self._current_category == self._SCIENCE:
-            self._printer.print(self._science_questions.pop(0))
-        if self._current_category == self._SPORTS:
-            self._printer.print(self._sports_questions.pop(0))
-        if self._current_category == self._ROCK:
-            self._printer.print(self._rock_questions.pop(0))
+        current_category_questions = self._questions_by_category[self._current_category]
+        self._printer.print(current_category_questions.pop(0))
 
     @property
     def _current_category(self):
-        current_player_place = self._current_player_place
-        if current_player_place == 0:
-            return "Pop"
-        if current_player_place == 4:
-            return "Pop"
-        if current_player_place == 8:
-            return "Pop"
-        if current_player_place == 1:
-            return "Science"
-        if current_player_place == 5:
-            return "Science"
-        if current_player_place == 9:
-            return "Science"
-        if current_player_place == 2:
-            return "Sports"
-        if current_player_place == 6:
-            return "Sports"
-        if current_player_place == 10:
-            return "Sports"
-        return "Rock"
+        current_player_place_mod_4 = self._current_player_place % 4
+        return {
+            0: self._POP,
+            1: self._SCIENCE,
+            2: self._SPORTS,
+            3: self._ROCK,
+        }[current_player_place_mod_4]
 
     @property
     def _current_player_place(self):
@@ -165,17 +152,11 @@ class Game:
                 self._printer.print(
                     f"{self._current_player_name} now has {self._purses[self._i_current_player]} Gold Coins."
                 )
-
                 there_is_no_winner = not self._did_player_win()
-                self._i_current_player += 1
-                if self._i_current_player == self._nb_players:
-                    self._i_current_player = 0
-
+                self._update_current_player()
                 return there_is_no_winner
             else:
-                self._i_current_player += 1
-                if self._i_current_player == self._nb_players:
-                    self._i_current_player = 0
+                self._update_current_player()
                 return True
 
         else:
@@ -186,11 +167,12 @@ class Game:
             )
 
             there_is_no_winner = not self._did_player_win()
-            self._i_current_player += 1
-            if self._i_current_player == self._nb_players:
-                self._i_current_player = 0
+            self._update_current_player()
 
             return there_is_no_winner
+
+    def _update_current_player(self):
+        self._i_current_player = (self._i_current_player + 1) % self._nb_players
 
     @property
     def _current_player_purse(self):
@@ -204,10 +186,7 @@ class Game:
         self._printer.print("Question was incorrectly answered")
         self._printer.print(f"{self._current_player_name} was sent to the penalty box")
         self._in_penalty_box[self._i_current_player] = True
-
-        self._i_current_player += 1
-        if self._i_current_player == self._nb_players:
-            self._i_current_player = 0
+        self._update_current_player()
         return True
 
     def _did_player_win(self):

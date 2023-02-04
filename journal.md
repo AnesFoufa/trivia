@@ -88,3 +88,7 @@ Extract property is a pythonic version of the [Extract function](https://refacto
 ## Not a refactor
 This commit is a bug fix. A little one but a bug fix nonetheless. So this is the first case where the test data
 need to be updated to reflect the bug fix.
+
+## Methods extractions and simplifications
+Nothing extraordinary, common code is extracted and functions with multiple branches are simplified.
+Note the use of dictionaries as maps to avoid multiple ifs and the use of modulo (%) operator.
