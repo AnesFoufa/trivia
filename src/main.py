@@ -87,42 +87,46 @@ class Game:
         self._printer.print(f"{self._current_player_name} is the current player")
         self._printer.print(f"They have rolled a {roll}")
 
-        if self._in_penalty_box[self._i_current_player]:
-            if roll % 2 != 0:
-                self._is_getting_out_of_penalty_box = True
+        current_player_in_penalty_box = self._current_player_in_penalty_box
+        if current_player_in_penalty_box:
+            self._update_penalty_box_status(roll)
 
-                self._printer.print(
-                    f"{self._current_player_name} is getting out of the penalty box"
-                )
-                self._move_current_player(roll)
-
-                self._printer.print(
-                    f"{self._current_player_name}'s new location is {str(self._current_player_place)}"
-                )
-                self._printer.print(f"The category is {self._current_category}")
-                self._ask_question()
-            else:
-                self._printer.print(
-                    f"{self._current_player_name} is not getting out of the penalty box"
-                )
-                self._is_getting_out_of_penalty_box = False
-        else:
+        if self._current_player_out_of_penalty_box():
             self._move_current_player(roll)
-
-            self._printer.print(
-                f"{self._current_player_name}'s new location is {self._current_player_place}"
-            )
-            self._printer.print(f"The category is {self._current_category}")
             self._ask_question()
+
+    @property
+    def _current_player_in_penalty_box(self):
+        return self._in_penalty_box[self._i_current_player]
+
+    @_current_player_in_penalty_box.setter
+    def _current_player_in_penalty_box(self, ipb):
+        self._in_penalty_box[self._i_current_player] = ipb
+
+    def _update_penalty_box_status(self, roll):
+        if roll % 2 != 0:
+            self._is_getting_out_of_penalty_box = True
+            self._printer.print(
+                f"{self._current_player_name} is getting out of the penalty box"
+            )
+        else:
+            self._printer.print(
+                f"{self._current_player_name} is not getting out of the penalty box"
+            )
+            self._is_getting_out_of_penalty_box = False
 
     def _move_current_player(self, roll):
         self._current_player_place = (self._current_player_place + roll) % 12
+        self._printer.print(
+            f"{self._current_player_name}'s new location is {str(self._current_player_place)}"
+        )
 
     @property
     def _current_player_name(self):
         return self._players_names[self._i_current_player]
 
     def _ask_question(self):
+        self._printer.print(f"The category is {self._current_category}")
         current_category_questions = self._questions_by_category[self._current_category]
         self._printer.print(current_category_questions.pop(0))
 
@@ -145,31 +149,24 @@ class Game:
         self._places[self._i_current_player] = place
 
     def was_correctly_answered(self):
-        if self._in_penalty_box[self._i_current_player]:
-            if self._is_getting_out_of_penalty_box:
-                self._printer.print("Answer was correct!!!!")
-                self._current_player_purse += 1
-                self._printer.print(
-                    f"{self._current_player_name} now has {self._purses[self._i_current_player]} Gold Coins."
-                )
-                there_is_no_winner = not self._did_player_win()
-                self._update_current_player()
-                return there_is_no_winner
-            else:
-                self._update_current_player()
-                return True
+        there_is_no_winner = True
 
-        else:
+        if self._current_player_out_of_penalty_box():
             self._printer.print("Answer was correct!!!!")
             self._current_player_purse += 1
             self._printer.print(
                 f"{self._current_player_name} now has {self._current_player_purse} Gold Coins."
             )
-
             there_is_no_winner = not self._did_player_win()
-            self._update_current_player()
 
-            return there_is_no_winner
+        self._update_current_player()
+        return there_is_no_winner
+
+    def _current_player_out_of_penalty_box(self):
+        return (
+            not self._current_player_in_penalty_box
+            or self._is_getting_out_of_penalty_box
+        )
 
     def _update_current_player(self):
         self._i_current_player = (self._i_current_player + 1) % self._nb_players
@@ -185,7 +182,7 @@ class Game:
     def wrong_answer(self):
         self._printer.print("Question was incorrectly answered")
         self._printer.print(f"{self._current_player_name} was sent to the penalty box")
-        self._in_penalty_box[self._i_current_player] = True
+        self._current_player_in_penalty_box = True
         self._update_current_player()
         return True
 

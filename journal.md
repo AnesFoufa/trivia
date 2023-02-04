@@ -92,3 +92,7 @@ need to be updated to reflect the bug fix.
 ## Methods extractions and simplifications
 Nothing extraordinary, common code is extracted and functions with multiple branches are simplified.
 Note the use of dictionaries as maps to avoid multiple ifs and the use of modulo (%) operator.
+
+## Extract methods and properties and clarify the execution flow
+I simplified the execution flow of the function "was_correctly_answered" by taking notice of the common code between
+different branches.
