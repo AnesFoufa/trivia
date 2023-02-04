@@ -62,7 +62,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Chet now has 1 Gold Coins."
     ]
   },
@@ -85,7 +85,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Pat now has 1 Gold Coins."
     ]
   },
@@ -108,7 +108,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Sue now has 1 Gold Coins."
     ]
   },
@@ -131,7 +131,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Jim now has 1 Gold Coins."
     ]
   },
@@ -154,7 +154,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Chet now has 2 Gold Coins."
     ]
   },
@@ -177,7 +177,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Pat now has 2 Gold Coins."
     ]
   },
@@ -200,7 +200,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Sue now has 2 Gold Coins."
     ]
   },
@@ -223,7 +223,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Jim now has 2 Gold Coins."
     ]
   },
@@ -269,7 +269,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Pat now has 3 Gold Coins."
     ]
   },
@@ -292,7 +292,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Sue now has 3 Gold Coins."
     ]
   },
@@ -315,7 +315,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Jim now has 3 Gold Coins."
     ]
   },
@@ -362,7 +362,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Pat now has 4 Gold Coins."
     ]
   },
@@ -385,7 +385,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Sue now has 4 Gold Coins."
     ]
   },
@@ -408,7 +408,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Jim now has 4 Gold Coins."
     ]
   },
@@ -501,7 +501,7 @@
     "args": [],
     "return": true,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Jim now has 5 Gold Coins."
     ]
   },
@@ -590,7 +590,7 @@
     "args": [],
     "return": false,
     "printed_lines": [
-      "Answer was corrent!!!!",
+      "Answer was correct!!!!",
       "Jim now has 6 Gold Coins."
     ]
   }

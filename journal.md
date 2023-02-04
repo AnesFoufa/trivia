@@ -84,3 +84,7 @@ The property how_many_players that returns an integer should be names nb_players
 [Properties](https://realpython.com/python-property/) are one of the most useful features. It disguises function calls as attributes access update. So no more setters and getters.
 
 Extract property is a pythonic version of the [Extract function](https://refactoring.com/catalog/extractFunction.html) pattern.
+
+## Not a refactor
+This commit is a bug fix. A little one but a bug fix nonetheless. So this is the first case where the test data
+need to be updated to reflect the bug fix.

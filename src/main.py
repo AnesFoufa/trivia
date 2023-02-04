@@ -179,7 +179,7 @@ class Game:
                 return True
 
         else:
-            self._printer.print("Answer was corrent!!!!")
+            self._printer.print("Answer was correct!!!!")
             self._current_player_purse += 1
             self._printer.print(
                 f"{self._current_player_name} now has {self._current_player_purse} Gold Coins."
