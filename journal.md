@@ -62,3 +62,5 @@ So now we update our database of scenarios with the printed lines and use this e
 ## First refactor
 Once we have confidence in our tests, we can start refactor our Game class. The first bold step is to stop redefining the python built-in "print"
 and use the printer each time we want to print.
+## Fix and clarify meaning
+Did player win? The answer should be true if the current player won the game so the function '_did_player_win' is not correctly implemented. Its functions using it must be adapted once fixed.

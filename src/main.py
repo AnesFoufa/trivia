@@ -161,12 +161,12 @@ class Game:
                     + " Gold Coins."
                 )
 
-                winner = self._did_player_win()
+                there_is_no_winner = not self._did_player_win()
                 self.current_player += 1
                 if self.current_player == len(self.players):
                     self.current_player = 0
 
-                return winner
+                return there_is_no_winner
             else:
                 self.current_player += 1
                 if self.current_player == len(self.players):
@@ -183,12 +183,12 @@ class Game:
                 + " Gold Coins."
             )
 
-            winner = self._did_player_win()
+            there_is_no_winner = not self._did_player_win()
             self.current_player += 1
             if self.current_player == len(self.players):
                 self.current_player = 0
 
-            return winner
+            return there_is_no_winner
 
     def wrong_answer(self):
         self._printer.print("Question was incorrectly answered")
@@ -203,7 +203,7 @@ class Game:
         return True
 
     def _did_player_win(self):
-        return not (self.purses[self.current_player] == 6)
+        return self.purses[self.current_player] == 6
 
 
 from random import randrange
