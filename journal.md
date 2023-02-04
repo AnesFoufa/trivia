@@ -105,3 +105,6 @@ Instead of scattering the state of a player among many lists, the state of a pla
 The existing methods that deal exclusively with the state of a Player are moved Player class.
 
 The code that deals exclusively with the player state in "answer" methods is moved to Player class.
+
+## Inline properties
+Inline Game's properties that are no longer necessary for readability since the extraction of the class Player
