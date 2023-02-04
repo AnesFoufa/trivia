@@ -59,8 +59,14 @@ is to log the text to be printed in a buffer. We add a method to capture the pri
 This BufferingPrinter act as a [test double](https://martinfowler.com/bliki/TestDouble.html).
 
 So now we update our database of scenarios with the printed lines and use this extra data to enrich our tests and ensure our behaviour is preserved.
+
 ## First refactor
 Once we have confidence in our tests, we can start refactor our Game class. The first bold step is to stop redefining the python built-in "print"
 and use the printer each time we want to print.
+
 ## Fix and clarify meaning
 Did player win? The answer should be true if the current player won the game so the function '_did_player_win' is not correctly implemented. Its functions using it must be adapted once fixed.
+
+## Standardize string interpolation
+This code use two methods to [interpolate strings](https://en.wikipedia.org/wiki/String_interpolation), the '%' operator and the string concatenation with '+'. I prefer the f-strings so I replaced
+both '%' and '+' strings by f-strings.
