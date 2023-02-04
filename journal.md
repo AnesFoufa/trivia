@@ -43,3 +43,19 @@ Tests are written and run using [pytest](https://docs.pytest.org/).
 You can find [here](https://docs.pytest.org/) an example of running pytest in Github Actions.
 
 On the concept of CI (Continuous Integration) you can read the classic [book by Paul Duvall](https://www.amazon.fr/Continuous-Integration-Improving-Software-Reducing/dp/0321336380)
+
+## Capture side effects
+This is the first time we are going to touch the code of the class Game since the automatic reformatting.
+Our goal at this iteration is simply to capture the printed text for each method call.
+
+We want must be very careful in changing the code base of Game since as long they don't check the printed texts, our tests fail in guaranteeing our changes do not alter the functional behaviour.
+
+Before each method calling the built-in function "print", we redefine print as referring to a protected method. Instead of printing is STDIN (the terminal in our case), it will print in a provided buffer we can inspect.
+
+In order not to alter too much the code of Game, we delegate the printing responsibility to another class: Printer. This class prints the text in file using the built-in print.
+
+We also define a subclass ou print whose role
+is to log the text to be printed in a buffer. We add a method to capture the printed lines and to reinitialize the buffer.
+This BufferingPrinter act as a [test double](https://martinfowler.com/bliki/TestDouble.html).
+
+So now we update our database of scenarios with the printed lines and use this extra data to enrich our tests and ensure our behaviour is preserved.

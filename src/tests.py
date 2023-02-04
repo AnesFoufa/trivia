@@ -1,6 +1,6 @@
 import pathlib
 import json
-from .main import Game
+from .main import Game, BufferPrinter
 
 
 def test_first_scenario():
@@ -26,7 +26,8 @@ def load_scenario(file_name):
 
 
 def run_game_with_scenario(scenario):
-    game = Game()
+    printer = BufferPrinter()
+    game = Game(printer=printer)
     for step in scenario:
         method = {
             "add": game.add,
@@ -37,4 +38,6 @@ def run_game_with_scenario(scenario):
         call_args = step["args"]
         returned_value = method(*call_args)
         expected_return_value = step["return"]
+        expected_printed_lines = step["printed_lines"]
         assert expected_return_value == returned_value
+        assert expected_printed_lines == printer.pop_printed_lines()

@@ -1,9 +1,29 @@
 import json
 import pathlib
+import sys
+from io import StringIO
+
+
+class Printer:
+    def __init__(self, file):
+        self.file = file
+
+    def print(self, text):
+        print(text, file=self.file)
+
+
+class BufferPrinter(Printer):
+    def __init__(self):
+        super().__init__(file=StringIO())
+
+    def pop_printed_lines(self):
+        res = self.file.getvalue().splitlines()
+        self.__init__()
+        return res
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, printer=None):
         self.players = []
         self.places = [0] * 6
         self.purses = [0] * 6
@@ -23,6 +43,11 @@ class Game:
             self.sports_questions.append("Sports Question %s" % i)
             self.rock_questions.append(self.create_rock_question(i))
 
+        if printer is None:
+            self._printer = Printer(file=sys.stdout)
+        else:
+            self._printer = printer
+
     def create_rock_question(self, index):
         return "Rock Question %s" % index
 
@@ -30,6 +55,7 @@ class Game:
         return self.how_many_players >= 2
 
     def add(self, player_name):
+        print = self._print
         self.players.append(player_name)
         self.places[self.how_many_players] = 0
         self.purses[self.how_many_players] = 0
@@ -45,6 +71,7 @@ class Game:
         return len(self.players)
 
     def roll(self, roll):
+        print = self._print
         print("%s is the current player" % self.players[self.current_player])
         print("They have rolled a %s" % roll)
 
@@ -91,6 +118,7 @@ class Game:
             self._ask_question()
 
     def _ask_question(self):
+        print = self._print
         if self._current_category == "Pop":
             print(self.pop_questions.pop(0))
         if self._current_category == "Science":
@@ -123,6 +151,7 @@ class Game:
         return "Rock"
 
     def was_correctly_answered(self):
+        print = self._print
         if self.in_penalty_box[self.current_player]:
             if self.is_getting_out_of_penalty_box:
                 print("Answer was correct!!!!")
@@ -164,6 +193,7 @@ class Game:
             return winner
 
     def wrong_answer(self):
+        print = self._print
         print("Question was incorrectly answered")
         print(self.players[self.current_player] + " was sent to the penalty box")
         self.in_penalty_box[self.current_player] = True
@@ -176,50 +206,69 @@ class Game:
     def _did_player_win(self):
         return not (self.purses[self.current_player] == 6)
 
+    def _print(self, text):
+        self._printer.print(text)
+
 
 from random import randrange
 
 
 def capture_interaction(file_name, players):
     not_a_winner = False
-    game = Game()
+    printer = BufferPrinter()
+    game = Game(printer)
     scenario = []
     for player in players:
         add_res = game.add(player)
+        printed_lines = printer.pop_printed_lines()
         scenario.append(
             {
                 "method": "add",
                 "args": [player],
                 "return": add_res,
+                "printed_lines": printed_lines,
             }
         )
     while True:
         roll_arg = randrange(5) + 1
         game.roll(roll_arg)
+        printed_lines = printer.pop_printed_lines()
         scenario.append(
             {
                 "method": "roll",
                 "args": [roll_arg],
                 "return": None,
+                "printed_lines": printed_lines,
             }
         )
 
         if randrange(9) == 7:
             not_a_winner = game.wrong_answer()
+            printed_lines = printer.pop_printed_lines()
             scenario.append(
-                {"method": "wrong_answer", "args": [], "return": not_a_winner}
+                {
+                    "method": "wrong_answer",
+                    "args": [],
+                    "return": not_a_winner,
+                    "printed_lines": printed_lines,
+                }
             )
         else:
             not_a_winner = game.was_correctly_answered()
+            printed_lines = printer.pop_printed_lines()
             scenario.append(
-                {"method": "was_correctly_answered", "args": [], "return": not_a_winner}
+                {
+                    "method": "was_correctly_answered",
+                    "args": [],
+                    "return": not_a_winner,
+                    "printed_lines": printed_lines,
+                }
             )
 
         if not not_a_winner:
             break
     path_to_data = pathlib.Path().absolute() / "data"
     with open(path_to_data / file_name, "w") as f:
-        print(scenario)
         json.dump(scenario, f)
 
 
