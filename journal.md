@@ -96,3 +96,12 @@ Note the use of dictionaries as maps to avoid multiple ifs and the use of modulo
 ## Extract methods and properties and clarify the execution flow
 I simplified the execution flow of the function "was_correctly_answered" by taking notice of the common code between
 different branches.
+
+## Extract class
+This is the most serious refactoring since the extraction of the printer.
+
+Instead of scattering the state of a player among many lists, the state of a player is extracted as a separate object.
+
+The existing methods that deal exclusively with the state of a Player are moved Player class.
+
+The code that deals exclusively with the player state in "answer" methods is moved to Player class.

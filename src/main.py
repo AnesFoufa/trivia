@@ -23,6 +23,45 @@ class BufferPrinter(Printer):
         return res
 
 
+class Player:
+    def __init__(self, name, printer):
+        self._name = name
+        self._printer = printer
+        self._place = 0
+        self._purse = 0
+        self._in_penalty_box = False
+
+    def move(self, roll):
+        self._place = (self._place + roll) % 12
+        self._printer.print(f"{self._name}'s new location is {str(self._place)}")
+
+    def answer_correctly(self):
+        self._printer.print("Answer was correct!!!!")
+        self._purse += 1
+        self._printer.print(f"{self._name} now has {self._purse} Gold Coins.")
+
+    def answer_incorrectly(self):
+        self._printer.print("Question was incorrectly answered")
+        self._printer.print(f"{self.name} was sent to the penalty box")
+        self._in_penalty_box = True
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def place(self):
+        return self._place
+
+    @property
+    def purse(self):
+        return self._purse
+
+    @property
+    def in_penalty_box(self):
+        return self._in_penalty_box
+
+
 class Game:
     _ROCK = "Rock"
     _SPORTS = "Sports"
@@ -30,11 +69,7 @@ class Game:
     _POP = "Pop"
 
     def __init__(self, printer=None):
-        self._players_names = []
-        self._places = [0] * 6
-        self._purses = [0] * 6
-        self._in_penalty_box = [0] * 6
-
+        self._players = []
         self._i_current_player = 0
         self._is_getting_out_of_penalty_box = False
 
@@ -61,47 +96,53 @@ class Game:
         else:
             self._printer = printer
 
-    @classmethod
-    def _create_question(cls, index, category):
-        return f"{category} Question {index}"
-
-    def is_playable(self):
-        return self._nb_players >= 2
-
     def add(self, player_name):
-        self._players_names.append(player_name)
-        self._places[self._nb_players] = 0
-        self._purses[self._nb_players] = 0
-        self._in_penalty_box[self._nb_players] = False
-
+        self._players.append(Player(name=player_name, printer=self._printer))
         self._printer.print(f"{player_name} was added")
-        self._printer.print(f"They are player number {len(self._players_names)}")
-
+        self._printer.print(f"They are player number {self._nb_players}")
         return True
-
-    @property
-    def _nb_players(self):
-        return len(self._players_names)
 
     def roll(self, roll):
         self._printer.print(f"{self._current_player_name} is the current player")
         self._printer.print(f"They have rolled a {roll}")
 
-        current_player_in_penalty_box = self._current_player_in_penalty_box
-        if current_player_in_penalty_box:
+        if self._current_player_in_penalty_box:
             self._update_penalty_box_status(roll)
 
-        if self._current_player_out_of_penalty_box():
+        if self._current_player_out_of_penalty_box:
             self._move_current_player(roll)
             self._ask_question()
 
+    def was_correctly_answered(self):
+        there_is_no_winner = True
+
+        if self._current_player_out_of_penalty_box:
+            self._current_player.answer_correctly()
+            there_is_no_winner = not self._did_player_win()
+
+        self._update_current_player()
+        return there_is_no_winner
+
+    def wrong_answer(self):
+        self._current_player.answer_incorrectly()
+        self._update_current_player()
+        return True
+
+    @classmethod
+    def _create_question(cls, index, category):
+        return f"{category} Question {index}"
+
+    @property
+    def _nb_players(self):
+        return len(self._players)
+
+    @property
+    def _current_player(self) -> Player:
+        return self._players[self._i_current_player]
+
     @property
     def _current_player_in_penalty_box(self):
-        return self._in_penalty_box[self._i_current_player]
-
-    @_current_player_in_penalty_box.setter
-    def _current_player_in_penalty_box(self, ipb):
-        self._in_penalty_box[self._i_current_player] = ipb
+        return self._current_player.in_penalty_box
 
     def _update_penalty_box_status(self, roll):
         if roll % 2 != 0:
@@ -116,14 +157,11 @@ class Game:
             self._is_getting_out_of_penalty_box = False
 
     def _move_current_player(self, roll):
-        self._current_player_place = (self._current_player_place + roll) % 12
-        self._printer.print(
-            f"{self._current_player_name}'s new location is {str(self._current_player_place)}"
-        )
+        self._current_player.move(roll)
 
     @property
     def _current_player_name(self):
-        return self._players_names[self._i_current_player]
+        return self._current_player.name
 
     def _ask_question(self):
         self._printer.print(f"The category is {self._current_category}")
@@ -142,26 +180,9 @@ class Game:
 
     @property
     def _current_player_place(self):
-        return self._places[self._i_current_player]
+        return self._current_player.place
 
-    @_current_player_place.setter
-    def _current_player_place(self, place):
-        self._places[self._i_current_player] = place
-
-    def was_correctly_answered(self):
-        there_is_no_winner = True
-
-        if self._current_player_out_of_penalty_box():
-            self._printer.print("Answer was correct!!!!")
-            self._current_player_purse += 1
-            self._printer.print(
-                f"{self._current_player_name} now has {self._current_player_purse} Gold Coins."
-            )
-            there_is_no_winner = not self._did_player_win()
-
-        self._update_current_player()
-        return there_is_no_winner
-
+    @property
     def _current_player_out_of_penalty_box(self):
         return (
             not self._current_player_in_penalty_box
@@ -173,18 +194,7 @@ class Game:
 
     @property
     def _current_player_purse(self):
-        return self._purses[self._i_current_player]
-
-    @_current_player_purse.setter
-    def _current_player_purse(self, purse):
-        self._purses[self._i_current_player] = purse
-
-    def wrong_answer(self):
-        self._printer.print("Question was incorrectly answered")
-        self._printer.print(f"{self._current_player_name} was sent to the penalty box")
-        self._current_player_in_penalty_box = True
-        self._update_current_player()
-        return True
+        return self._current_player.purse
 
     def _did_player_win(self):
         return self._current_player_purse == 6
