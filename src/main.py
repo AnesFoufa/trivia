@@ -2,6 +2,7 @@ import json
 import pathlib
 import sys
 from io import StringIO
+from random import randrange
 
 
 class Printer:
@@ -29,24 +30,24 @@ class Game:
     _POP = "Pop"
 
     def __init__(self, printer=None):
-        self.players = []
-        self.places = [0] * 6
-        self.purses = [0] * 6
-        self.in_penalty_box = [0] * 6
+        self._players_names = []
+        self._places = [0] * 6
+        self._purses = [0] * 6
+        self._in_penalty_box = [0] * 6
 
-        self.pop_questions = []
-        self.science_questions = []
-        self.sports_questions = []
-        self.rock_questions = []
+        self._pop_questions = []
+        self._science_questions = []
+        self._sports_questions = []
+        self._rock_questions = []
 
-        self.current_player = 0
-        self.is_getting_out_of_penalty_box = False
+        self._i_current_player = 0
+        self._is_getting_out_of_penalty_box = False
 
         for i in range(50):
-            self.pop_questions.append(self._create_question(i, self._POP))
-            self.science_questions.append(self._create_question(i, self._SCIENCE))
-            self.sports_questions.append(self._create_question(i, self._SPORTS))
-            self.rock_questions.append(self._create_question(i, self._ROCK))
+            self._pop_questions.append(self._create_question(i, self._POP))
+            self._science_questions.append(self._create_question(i, self._SCIENCE))
+            self._sports_questions.append(self._create_question(i, self._SPORTS))
+            self._rock_questions.append(self._create_question(i, self._ROCK))
 
         if printer is None:
             self._printer = Printer(file=sys.stdout)
@@ -61,146 +62,156 @@ class Game:
         return self._nb_players >= 2
 
     def add(self, player_name):
-        self.players.append(player_name)
-        self.places[self._nb_players] = 0
-        self.purses[self._nb_players] = 0
-        self.in_penalty_box[self._nb_players] = False
+        self._players_names.append(player_name)
+        self._places[self._nb_players] = 0
+        self._purses[self._nb_players] = 0
+        self._in_penalty_box[self._nb_players] = False
 
         self._printer.print(f"{player_name} was added")
-        self._printer.print(f"They are player number {len(self.players)}")
+        self._printer.print(f"They are player number {len(self._players_names)}")
 
         return True
 
     @property
     def _nb_players(self):
-        return len(self.players)
+        return len(self._players_names)
 
     def roll(self, roll):
-        self._printer.print(
-            f"{self.players[self.current_player]} is the current player"
-        )
+        self._printer.print(f"{self._current_player_name} is the current player")
         self._printer.print(f"They have rolled a {roll}")
 
-        if self.in_penalty_box[self.current_player]:
+        if self._in_penalty_box[self._i_current_player]:
             if roll % 2 != 0:
-                self.is_getting_out_of_penalty_box = True
+                self._is_getting_out_of_penalty_box = True
 
                 self._printer.print(
-                    f"{self.players[self.current_player]} is getting out of the penalty box"
+                    f"{self._current_player_name} is getting out of the penalty box"
                 )
-                self.places[self.current_player] = (
-                    self.places[self.current_player] + roll
-                )
-                if self.places[self.current_player] > 11:
-                    self.places[self.current_player] = (
-                        self.places[self.current_player] - 12
-                    )
+                self._current_player_place = self._current_player_place + roll
+                if self._current_player_place > 11:
+                    self._current_player_place = self._current_player_place - 12
 
                 self._printer.print(
-                    f"{self.players[self.current_player]}'s new location is {str(self.places[self.current_player])}"
+                    f"{self._current_player_name}'s new location is {str(self._current_player_place)}"
                 )
                 self._printer.print(f"The category is {self._current_category}")
                 self._ask_question()
             else:
                 self._printer.print(
-                    f"{self.players[self.current_player]} is not getting out of the penalty box"
+                    f"{self._current_player_name} is not getting out of the penalty box"
                 )
-                self.is_getting_out_of_penalty_box = False
+                self._is_getting_out_of_penalty_box = False
         else:
-            self.places[self.current_player] = self.places[self.current_player] + roll
-            if self.places[self.current_player] > 11:
-                self.places[self.current_player] = self.places[self.current_player] - 12
+            self._current_player_place = self._current_player_place + roll
+            if self._current_player_place > 11:
+                self._current_player_place = self._current_player_place - 12
 
             self._printer.print(
-                f"{self.players[self.current_player]}'s new location is {self.places[self.current_player]}"
+                f"{self._current_player_name}'s new location is {self._current_player_place}"
             )
             self._printer.print(f"The category is {self._current_category}")
             self._ask_question()
 
+    @property
+    def _current_player_name(self):
+        return self._players_names[self._i_current_player]
+
     def _ask_question(self):
         if self._current_category == self._POP:
-            self._printer.print(self.pop_questions.pop(0))
+            self._printer.print(self._pop_questions.pop(0))
         if self._current_category == self._SCIENCE:
-            self._printer.print(self.science_questions.pop(0))
+            self._printer.print(self._science_questions.pop(0))
         if self._current_category == self._SPORTS:
-            self._printer.print(self.sports_questions.pop(0))
+            self._printer.print(self._sports_questions.pop(0))
         if self._current_category == self._ROCK:
-            self._printer.print(self.rock_questions.pop(0))
+            self._printer.print(self._rock_questions.pop(0))
 
     @property
     def _current_category(self):
-        if self.places[self.current_player] == 0:
+        current_player_place = self._current_player_place
+        if current_player_place == 0:
             return "Pop"
-        if self.places[self.current_player] == 4:
+        if current_player_place == 4:
             return "Pop"
-        if self.places[self.current_player] == 8:
+        if current_player_place == 8:
             return "Pop"
-        if self.places[self.current_player] == 1:
+        if current_player_place == 1:
             return "Science"
-        if self.places[self.current_player] == 5:
+        if current_player_place == 5:
             return "Science"
-        if self.places[self.current_player] == 9:
+        if current_player_place == 9:
             return "Science"
-        if self.places[self.current_player] == 2:
+        if current_player_place == 2:
             return "Sports"
-        if self.places[self.current_player] == 6:
+        if current_player_place == 6:
             return "Sports"
-        if self.places[self.current_player] == 10:
+        if current_player_place == 10:
             return "Sports"
         return "Rock"
 
+    @property
+    def _current_player_place(self):
+        return self._places[self._i_current_player]
+
+    @_current_player_place.setter
+    def _current_player_place(self, place):
+        self._places[self._i_current_player] = place
+
     def was_correctly_answered(self):
-        if self.in_penalty_box[self.current_player]:
-            if self.is_getting_out_of_penalty_box:
+        if self._in_penalty_box[self._i_current_player]:
+            if self._is_getting_out_of_penalty_box:
                 self._printer.print("Answer was correct!!!!")
-                self.purses[self.current_player] += 1
+                self._current_player_purse += 1
                 self._printer.print(
-                    f"{self.players[self.current_player]} now has {self.purses[self.current_player]} Gold Coins."
+                    f"{self._current_player_name} now has {self._purses[self._i_current_player]} Gold Coins."
                 )
 
                 there_is_no_winner = not self._did_player_win()
-                self.current_player += 1
-                if self.current_player == self._nb_players:
-                    self.current_player = 0
+                self._i_current_player += 1
+                if self._i_current_player == self._nb_players:
+                    self._i_current_player = 0
 
                 return there_is_no_winner
             else:
-                self.current_player += 1
-                if self.current_player == self._nb_players:
-                    self.current_player = 0
+                self._i_current_player += 1
+                if self._i_current_player == self._nb_players:
+                    self._i_current_player = 0
                 return True
 
         else:
             self._printer.print("Answer was corrent!!!!")
-            self.purses[self.current_player] += 1
+            self._current_player_purse += 1
             self._printer.print(
-                f"{self.players[self.current_player]} now has {self.purses[self.current_player]} Gold Coins."
+                f"{self._current_player_name} now has {self._current_player_purse} Gold Coins."
             )
 
             there_is_no_winner = not self._did_player_win()
-            self.current_player += 1
-            if self.current_player == self._nb_players:
-                self.current_player = 0
+            self._i_current_player += 1
+            if self._i_current_player == self._nb_players:
+                self._i_current_player = 0
 
             return there_is_no_winner
 
+    @property
+    def _current_player_purse(self):
+        return self._purses[self._i_current_player]
+
+    @_current_player_purse.setter
+    def _current_player_purse(self, purse):
+        self._purses[self._i_current_player] = purse
+
     def wrong_answer(self):
         self._printer.print("Question was incorrectly answered")
-        self._printer.print(
-            f"{self.players[self.current_player]} was sent to the penalty box"
-        )
-        self.in_penalty_box[self.current_player] = True
+        self._printer.print(f"{self._current_player_name} was sent to the penalty box")
+        self._in_penalty_box[self._i_current_player] = True
 
-        self.current_player += 1
-        if self.current_player == self._nb_players:
-            self.current_player = 0
+        self._i_current_player += 1
+        if self._i_current_player == self._nb_players:
+            self._i_current_player = 0
         return True
 
     def _did_player_win(self):
-        return self.purses[self.current_player] == 6
-
-
-from random import randrange
+        return self._current_player_purse == 6
 
 
 def capture_interaction(file_name, players):

@@ -79,3 +79,8 @@ Categories' names can be extracted as constants.
 
 ## Better names
 The property how_many_players that returns an integer should be names nb_players. Since it is not used outside the class, it should be protected (prefixed by a underscore).
+
+## Property extraction and encapsulation
+[Properties](https://realpython.com/python-property/) are one of the most useful features. It disguises function calls as attributes access update. So no more setters and getters.
+
+Extract property is a pythonic version of the [Extract function](https://refactoring.com/catalog/extractFunction.html) pattern.
