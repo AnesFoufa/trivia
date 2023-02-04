@@ -70,3 +70,9 @@ Did player win? The answer should be true if the current player won the game so 
 ## Standardize string interpolation
 This code use two methods to [interpolate strings](https://en.wikipedia.org/wiki/String_interpolation), the '%' operator and the string concatenation with '+'. I prefer the f-strings so I replaced
 both '%' and '+' strings by f-strings.
+
+## Generalize method
+The method creating rock question can be generalized to create a question of any category. It is a class method since it is not specific to an instance and is protected since it is not use outside the
+class itself.
+
+Categories' names can be extracted as constants.

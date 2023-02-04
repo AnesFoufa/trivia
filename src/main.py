@@ -23,6 +23,11 @@ class BufferPrinter(Printer):
 
 
 class Game:
+    _ROCK = "Rock"
+    _SPORTS = "Sports"
+    _SCIENCE = "Science"
+    _POP = "Pop"
+
     def __init__(self, printer=None):
         self.players = []
         self.places = [0] * 6
@@ -38,18 +43,19 @@ class Game:
         self.is_getting_out_of_penalty_box = False
 
         for i in range(50):
-            self.pop_questions.append(f"Pop Question {i}")
-            self.science_questions.append(f"Science Question {i}")
-            self.sports_questions.append(f"Sports Question {i}")
-            self.rock_questions.append(self.create_rock_question(i))
+            self.pop_questions.append(self._create_question(i, self._POP))
+            self.science_questions.append(self._create_question(i, self._SCIENCE))
+            self.sports_questions.append(self._create_question(i, self._SPORTS))
+            self.rock_questions.append(self._create_question(i, self._ROCK))
 
         if printer is None:
             self._printer = Printer(file=sys.stdout)
         else:
             self._printer = printer
 
-    def create_rock_question(self, index):
-        return f"Rock Question {index}"
+    @classmethod
+    def _create_question(cls, index, category):
+        return f"{category} Question {index}"
 
     def is_playable(self):
         return self.how_many_players >= 2
@@ -112,13 +118,13 @@ class Game:
             self._ask_question()
 
     def _ask_question(self):
-        if self._current_category == "Pop":
+        if self._current_category == self._POP:
             self._printer.print(self.pop_questions.pop(0))
-        if self._current_category == "Science":
+        if self._current_category == self._SCIENCE:
             self._printer.print(self.science_questions.pop(0))
-        if self._current_category == "Sports":
+        if self._current_category == self._SPORTS:
             self._printer.print(self.sports_questions.pop(0))
-        if self._current_category == "Rock":
+        if self._current_category == self._ROCK:
             self._printer.print(self.rock_questions.pop(0))
 
     @property
