@@ -58,13 +58,13 @@ class Game:
         return f"{category} Question {index}"
 
     def is_playable(self):
-        return self.how_many_players >= 2
+        return self._nb_players >= 2
 
     def add(self, player_name):
         self.players.append(player_name)
-        self.places[self.how_many_players] = 0
-        self.purses[self.how_many_players] = 0
-        self.in_penalty_box[self.how_many_players] = False
+        self.places[self._nb_players] = 0
+        self.purses[self._nb_players] = 0
+        self.in_penalty_box[self._nb_players] = False
 
         self._printer.print(f"{player_name} was added")
         self._printer.print(f"They are player number {len(self.players)}")
@@ -72,7 +72,7 @@ class Game:
         return True
 
     @property
-    def how_many_players(self):
+    def _nb_players(self):
         return len(self.players)
 
     def roll(self, roll):
@@ -160,13 +160,13 @@ class Game:
 
                 there_is_no_winner = not self._did_player_win()
                 self.current_player += 1
-                if self.current_player == len(self.players):
+                if self.current_player == self._nb_players:
                     self.current_player = 0
 
                 return there_is_no_winner
             else:
                 self.current_player += 1
-                if self.current_player == len(self.players):
+                if self.current_player == self._nb_players:
                     self.current_player = 0
                 return True
 
@@ -179,7 +179,7 @@ class Game:
 
             there_is_no_winner = not self._did_player_win()
             self.current_player += 1
-            if self.current_player == len(self.players):
+            if self.current_player == self._nb_players:
                 self.current_player = 0
 
             return there_is_no_winner
@@ -192,7 +192,7 @@ class Game:
         self.in_penalty_box[self.current_player] = True
 
         self.current_player += 1
-        if self.current_player == len(self.players):
+        if self.current_player == self._nb_players:
             self.current_player = 0
         return True
 
@@ -204,7 +204,6 @@ from random import randrange
 
 
 def capture_interaction(file_name, players):
-    not_a_winner = False
     printer = BufferPrinter()
     game = Game(printer)
     scenario = []

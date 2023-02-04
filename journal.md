@@ -76,3 +76,6 @@ The method creating rock question can be generalized to create a question of any
 class itself.
 
 Categories' names can be extracted as constants.
+
+## Better names
+The property how_many_players that returns an integer should be names nb_players. Since it is not used outside the class, it should be protected (prefixed by a underscore).
